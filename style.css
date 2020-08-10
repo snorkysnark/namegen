@@ -25,18 +25,18 @@ body {
     margin-top: 10px;
 }
 
-#typewriter-group {
+#typewriter {
     z-index: 1;
     pointer-events: none;
     position: relative;
 }
 
-#typewriter-svg {
+.typewriter-svg {
     width: 400px;
     height: auto;
 }
 
-#typewriter-button {
+.typewriter-clickarea {
     pointer-events: all;
     position: absolute;
     z-index: 2;
@@ -56,7 +56,7 @@ body {
     background-color: bisque;
     transform: translateY(41px);
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     height: fit-content;
     padding-top: 5px;
 }
