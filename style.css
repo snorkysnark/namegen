@@ -78,6 +78,7 @@ body {
 
 .name {
     font-family: 'Merriweather', serif;
+    font-size: larger;
     font-weight: 400;
     text-align: center;
     margin-bottom: 5px;
