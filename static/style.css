@@ -1,0 +1,89 @@
+body {
+    font-family: sans-serif;
+}
+
+.main {
+    position: absolute;
+    width: fit-content;
+    display: flex;
+    left: 0; 
+    right: 0;
+    bottom: 0;
+    margin-left: auto; 
+    margin-right: auto;
+    flex-direction: column-reverse;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.title {
+    text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 50px;
+    user-select: none;
+    margin-top: 10px;
+}
+
+#typewriter {
+    width: 400px;
+    height: auto;
+    cursor: pointer;
+}
+
+#paper {
+    position: relative;
+    width: 250px;
+    background-color: bisque;
+    transform: translateY(41px);
+    z-index: -1;
+    display: flex;
+    flex-direction: column-reverse;
+    height: fit-content;
+}
+
+#paper::after {
+    position: absolute;
+    top: 0;
+    content: "";
+    display: block;
+    width: 250px;
+    height: 20px;
+    transform: translateY(-14px);
+    background: linear-gradient(-45deg, bisque 10px, transparent 10px),
+                linear-gradient(45deg, bisque 10px, transparent 10px);
+    background-size: 25px 15px;
+    background-position-x: 13px;
+    background-repeat: repeat-x;
+}
+
+.tw-metal-dark {
+    fill: #47a083;
+}
+
+.tw-metal-light {
+    fill: #71c3a9;
+}
+
+.tw-leg {
+    fill: #38454f;
+}
+
+.tw-paper-holder {
+    fill: #434c6d;
+}
+
+.tw-wheel {
+    fill: #38454f;
+}
+
+.tw-wires {
+    fill: #283238;
+}
+
+.tw-handle {
+    fill: #cbd4d8;
+}
+
+.tw-buttons {
+    fill: #e7eced;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "namegen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "servor static --browse --reload"
+  },
+  "author": "francisthebasilisk",
+  "license": "ISC",
+  "devDependencies": {
+    "servor": "^4.0.2"
+  }
+}
