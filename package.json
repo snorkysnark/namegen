@@ -4,11 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "servor static --browse --reload"
+    "start": "servor static --browse --reload",
+    "build": "rollup -c rollup/rollup.config.js"
   },
   "author": "francisthebasilisk",
   "license": "ISC",
   "devDependencies": {
-    "servor": "^4.0.2"
+    "@rollup/plugin-typescript": "^5.0.2",
+    "rollup": "^2.23.1",
+    "servor": "^4.0.2",
+    "tslib": "^2.0.1",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "kute.js": "^2.0.12"
   }
 }

@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "es6",
+      "noImplicitAny": true,
+      "noImplicitThis": true,
+      "strict": true,
+      "noEmit": true,
+      "allowJs": true,
+      "moduleResolution": "node"
+    },
+    "include": ["src/**/*", "types/**/*"],
+    "exclude": ["node_modules"]
+  }
+  
