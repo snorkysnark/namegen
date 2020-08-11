@@ -3,6 +3,8 @@ import Paper from './paper';
 
 const paper = new Paper("#paper");
 const typewriter = new Typewriter("#typewriter");
-typewriter.setOnClick(() => {
+
+typewriter.onClick = () => {
+    typewriter.animateButtons();
     paper.pushWord("click");
-});
+}

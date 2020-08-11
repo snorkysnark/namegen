@@ -9,16 +9,25 @@ function querySelectorErr(selector: string, description?: string): Element {
     return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
 }
 
-function getTransformPosition(element: Element): {x: number, y: number} {
+function getTransformPosition(element: Element): Vector2 {
     const matrixString = window.getComputedStyle(element).transform;
-    const numbers = matrixString.match(/[-]?\d+/g);
+    const martix = matrixString.match(/[-]?\d+(\.\d+)?/g); //positive or negative floating point numbers
     let x = 0;
     let y = 0;
-    if(numbers && numbers.length == 6) {
-        x = +numbers![4];
-        y = +numbers![5];
+    if(martix && martix.length == 6) {
+        x = +martix![4];
+        y = +martix![5];
     }
     return {x, y};
 }
 
-export {unwrap, querySelectorErr, getTransformPosition};
+function randomFilter<T>(array: Array<T>): Array<T> {
+    return array.filter((a) => Math.random() > 0.5);
+}
+
+function randomSort<T>(array: Array<T>): Array<T> {
+    return array.sort((a, b) => Math.random() - 0.5);
+}
+
+export interface Vector2 {x: number, y: number};
+export {unwrap, querySelectorErr, getTransformPosition, randomFilter, randomSort};
