@@ -1,4 +1,4 @@
-import { g as ge } from './lib/kute.esm.min.js';
+import { a as anime } from './lib/anime.es.js';
 
 function unwrap(nullable, error) {
     if (nullable !== null) {
@@ -9,51 +9,55 @@ function unwrap(nullable, error) {
 function querySelectorErr(selector, description) {
     return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
 }
-function div(content, options) {
-    let element = document.createElement("div");
-    element.innerHTML = content;
-    if (options) {
-        if (options.id)
-            element.setAttribute("id", options.id);
-        if (options.class)
-            element.setAttribute("class", options.class);
+function getTransformPosition(element) {
+    const matrixString = window.getComputedStyle(element).transform;
+    const numbers = matrixString.match(/[-]?\d+/g);
+    let x = 0;
+    let y = 0;
+    if (numbers && numbers.length == 6) {
+        x = +numbers[4];
+        y = +numbers[5];
     }
-    return element;
+    return { x, y };
 }
 
 class Typewriter {
-    constructor(selector, onClick) {
+    constructor(selector) {
         let root = querySelectorErr(selector);
-        let clickArea = querySelectorErr(".typewriter-clickarea");
+        this.clickArea = querySelectorErr(".typewriter-clickarea");
         this.handleTop = querySelectorErr(".tw-handle-top");
         this.handleCenter = querySelectorErr(".tw-handle-center");
         this.handleBottom = querySelectorErr(".tw-handle-bottom");
         this.buttons = [...document.querySelectorAll(".tw-button")];
-        if (onClick) {
-            clickArea.addEventListener("click", onClick);
-        }
+    }
+    setOnClick(action) {
+        this.clickArea.addEventListener("click", action);
     }
 }
 
 class Paper {
     constructor(selector) {
         this.container = querySelectorErr(selector);
+        this.initialTranslation = getTransformPosition(this.container).y;
     }
     pushWord(word) {
-        const element = div(word, { class: "name" });
+        const element = document.createElement("div");
+        element.innerHTML = word;
+        element.className = "name";
         this.container.appendChild(element);
-        ge.fromTo(this.container, { translateY: 66 }, { translateY: 41 }, { duration: 100 }).start();
+        const textHeight = element.offsetHeight;
+        this.container.style.transform = `translateY(${this.initialTranslation + textHeight}px)`;
+        anime({
+            targets: this.container,
+            translateY: this.initialTranslation,
+            easing: "linear",
+            duration: 100
+        });
     }
 }
 
-class App {
-    constructor(typewriterSelector, paperSelector) {
-        this.typewriter = new Typewriter(typewriterSelector, () => this.onTypewriterClick());
-        this.paper = new Paper(paperSelector);
-    }
-    onTypewriterClick() {
-        console.log("click");
-        this.paper.pushWord("сосулька");
-    }
-}
-new App("#typewriter", "#paper");
+const paper = new Paper("#paper");
+const typewriter = new Typewriter("#typewriter");
+typewriter.setOnClick(() => {
+    paper.pushWord("click");
+});
