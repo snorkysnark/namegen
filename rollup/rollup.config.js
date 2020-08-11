@@ -19,7 +19,7 @@ export default {
     plugins: [
         deleteFolder(outputFolder),
         manualResolve({
-            "kute.js": "./node_modules/kute.js/dist/kute.esm.min.js"
+            "animejs": "./node_modules/animejs/lib/anime.es.js"
         }),
         typescript()
     ]

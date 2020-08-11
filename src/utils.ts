@@ -9,14 +9,16 @@ function querySelectorErr(selector: string, description?: string): Element {
     return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
 }
 
-function div(content: string, options?: {id?: string, class?: string}): HTMLDivElement {
-    let element = document.createElement("div");
-    element.innerHTML = content;
-    if(options) {
-        if(options.id) element.setAttribute("id", options.id);
-        if(options.class) element.setAttribute("class", options.class);
+function getTransformPosition(element: Element): {x: number, y: number} {
+    const matrixString = window.getComputedStyle(element).transform;
+    const numbers = matrixString.match(/[-]?\d+/g);
+    let x = 0;
+    let y = 0;
+    if(numbers && numbers.length == 6) {
+        x = +numbers![4];
+        y = +numbers![5];
     }
-    return element;
+    return {x, y};
 }
 
-export {unwrap, querySelectorErr, div};
+export {unwrap, querySelectorErr, getTransformPosition};

@@ -2,14 +2,13 @@
     "compilerOptions": {
       "target": "es6",
       "module": "es6",
-      "noImplicitAny": true,
-      "noImplicitThis": true,
       "strict": true,
       "noEmit": true,
       "allowJs": true,
-      "moduleResolution": "node"
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true
     },
-    "include": ["src/**/*", "types/**/*"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
   }
   
