@@ -9,7 +9,7 @@ function querySelectorErr(selector: string, description?: string): Element {
     return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
 }
 
-function getTransformPosition(element: Element): Vector2 {
+function getCssTransformPosition(element: Element): Vector2 {
     const matrixString = window.getComputedStyle(element).transform;
     const martix = matrixString.match(/[-]?\d+(\.\d+)?/g); //positive or negative floating point numbers
     let x = 0;
@@ -18,6 +18,13 @@ function getTransformPosition(element: Element): Vector2 {
         x = +martix![4];
         y = +martix![5];
     }
+    return {x, y};
+}
+
+function getSvgTransformPosition(element: SVGAElement): Vector2 {
+    const matrix = element.transform.baseVal.getItem(0).matrix;
+    let x = matrix.e;
+    let y = matrix.f;
     return {x, y};
 }
 
@@ -30,4 +37,4 @@ function randomSort<T>(array: Array<T>): Array<T> {
 }
 
 export interface Vector2 {x: number, y: number};
-export {unwrap, querySelectorErr, getTransformPosition, randomFilter, randomSort};
+export {unwrap, querySelectorErr, getCssTransformPosition, getSvgTransformPosition, randomFilter, randomSort};

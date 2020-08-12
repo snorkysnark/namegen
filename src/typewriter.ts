@@ -1,16 +1,18 @@
 import anime from 'animejs';
 import * as utils from './utils';
 
+const handleAnimationDuration = 150;
+const buttonAnimationDuration = 200;
+
 const buttonAnimationOffset = 3;
 
 export default class Typewriter {
     clickArea: Element;
     
-    handleTop: Element;
-    handleCenter: Element;
-    handleBottom: Element;
+    handleTop: SVGAElement;
+    handleCenter: SVGAElement;
 
-    buttons: Element[];
+    buttons: SVGAElement[];
 
     initialButtonPos: utils.Vector2;
     buttonAnimation: anime.AnimeInstance | null = null;
@@ -19,12 +21,11 @@ export default class Typewriter {
         let root = utils.querySelectorErr(selector);
 
         this.clickArea = utils.querySelectorErr(".typewriter-clickarea");
-        this.handleTop = utils.querySelectorErr(".tw-handle-top");
-        this.handleCenter = utils.querySelectorErr(".tw-handle-center");
-        this.handleBottom = utils.querySelectorErr(".tw-handle-bottom");
-        this.buttons = [...document.querySelectorAll(".tw-button")];
+        this.handleTop = utils.querySelectorErr(".tw-handle-top") as SVGAElement;
+        this.handleCenter = utils.querySelectorErr(".tw-handle-center") as SVGAElement;
+        this.buttons = [...document.querySelectorAll(".tw-button")] as SVGAElement[];
 
-        this.initialButtonPos = utils.getTransformPosition(this.buttons[0]);
+        this.initialButtonPos = utils.getSvgTransformPosition(this.buttons[0]);
     }
 
     set onClick(action: ()=>void) {
@@ -36,7 +37,7 @@ export default class Typewriter {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
             const targets = utils.randomSort(utils.randomFilter(this.buttons));
-            const duration = 200 / targets.length;
+            const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,
                 delay: (button, index , length) => index * duration,
@@ -46,5 +47,28 @@ export default class Typewriter {
                 duration
             });
         }
+    }
+
+    public animateHandle() {
+        const duration = handleAnimationDuration;
+        this.handleTop.setAttribute("transform", "translate(0 0)");
+        anime({
+            targets: this.handleTop,
+            transform: "translate(0 16)",
+            easing: "linear",
+            direction: "alternate",
+            duration
+        });
+        this.handleCenter.setAttribute("transform", "translate(0 0) scale(1 1)");
+        anime({
+            targets: this.handleCenter,
+            easing: "linear",
+            direction: "alternate",
+            keyframes: [
+                {transform: "translate(0 10) scale(1 0)"},
+                {transform: "translate(0 8.5) scale(1 1)"}
+            ],
+            duration
+        });
     }
 }
