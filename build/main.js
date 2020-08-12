@@ -9,7 +9,7 @@ function unwrap(nullable, error) {
 function querySelectorErr(selector, description) {
     return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
 }
-function getTransformPosition(element) {
+function getCssTransformPosition(element) {
     const matrixString = window.getComputedStyle(element).transform;
     const martix = matrixString.match(/[-]?\d+(\.\d+)?/g); //positive or negative floating point numbers
     let x = 0;
@@ -20,6 +20,12 @@ function getTransformPosition(element) {
     }
     return { x, y };
 }
+function getSvgTransformPosition(element) {
+    const matrix = element.transform.baseVal.getItem(0).matrix;
+    let x = matrix.e;
+    let y = matrix.f;
+    return { x, y };
+}
 function randomFilter(array) {
     return array.filter((a) => Math.random() > 0.5);
 }
@@ -27,6 +33,8 @@ function randomSort(array) {
     return array.sort((a, b) => Math.random() - 0.5);
 }
 
+const handleAnimationDuration = 150;
+const buttonAnimationDuration = 200;
 const buttonAnimationOffset = 3;
 class Typewriter {
     constructor(selector) {
@@ -35,9 +43,8 @@ class Typewriter {
         this.clickArea = querySelectorErr(".typewriter-clickarea");
         this.handleTop = querySelectorErr(".tw-handle-top");
         this.handleCenter = querySelectorErr(".tw-handle-center");
-        this.handleBottom = querySelectorErr(".tw-handle-bottom");
         this.buttons = [...document.querySelectorAll(".tw-button")];
-        this.initialButtonPos = getTransformPosition(this.buttons[0]);
+        this.initialButtonPos = getSvgTransformPosition(this.buttons[0]);
     }
     set onClick(action) {
         this.clickArea.addEventListener("click", action);
@@ -47,7 +54,7 @@ class Typewriter {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
             const targets = randomSort(randomFilter(this.buttons));
-            const duration = 200 / targets.length;
+            const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,
                 delay: (button, index, length) => index * duration,
@@ -58,12 +65,34 @@ class Typewriter {
             });
         }
     }
+    animateHandle() {
+        const duration = handleAnimationDuration;
+        this.handleTop.setAttribute("transform", "translate(0 0)");
+        anime({
+            targets: this.handleTop,
+            transform: "translate(0 16)",
+            easing: "linear",
+            direction: "alternate",
+            duration
+        });
+        this.handleCenter.setAttribute("transform", "translate(0 0) scale(1 1)");
+        anime({
+            targets: this.handleCenter,
+            easing: "linear",
+            direction: "alternate",
+            keyframes: [
+                { transform: "translate(0 10) scale(1 0)" },
+                { transform: "translate(0 8.5) scale(1 1)" }
+            ],
+            duration
+        });
+    }
 }
 
 class Paper {
     constructor(selector) {
         this.container = querySelectorErr(selector);
-        this.initialTranslation = getTransformPosition(this.container).y;
+        this.initialTranslation = getCssTransformPosition(this.container).y;
     }
     pushWord(word) {
         const element = document.createElement("div");
@@ -83,7 +112,11 @@ class Paper {
 
 const paper = new Paper("#paper");
 const typewriter = new Typewriter("#typewriter");
+const sound = new Audio("type.wav");
 typewriter.onClick = () => {
+    sound.currentTime = 0;
+    sound.play();
     typewriter.animateButtons();
+    typewriter.animateHandle();
     paper.pushWord("click");
 };
