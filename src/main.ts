@@ -12,5 +12,5 @@ typewriter.onClick = () => {
     typewriter.animateButtons();
     typewriter.animateHandle();
 
-    paper.pushWord("click");
+    paper.pushWord("name");
 }

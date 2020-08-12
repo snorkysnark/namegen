@@ -118,5 +118,5 @@ typewriter.onClick = () => {
     sound.play();
     typewriter.animateButtons();
     typewriter.animateHandle();
-    paper.pushWord("click");
+    paper.pushWord("name");
 };
