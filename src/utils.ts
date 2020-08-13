@@ -43,6 +43,18 @@ const random = {
     
     rangeInt: function(min: number, max: number): number {
         return Math.floor(min + Math.random() * (max - min));
+    },
+
+    boolean: function(): boolean {
+        return Math.random() < 0.5;
+    },
+
+    charFrom: function(chars: string): string {
+        return chars.charAt(this.rangeInt(0, chars.length));
+    },
+
+    chance: function(chance: number): boolean {
+        return Math.random() < chance;
     }
 }
 

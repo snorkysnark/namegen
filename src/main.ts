@@ -1,5 +1,8 @@
 import Typewriter from './typewriter';
 import Paper from './paper';
+import generateWord from './generator';
+
+const syllables = {min: 2, max: 4};
 
 const paper = new Paper("#paper");
 const typewriter = new Typewriter("#typewriter");
@@ -12,5 +15,6 @@ typewriter.onClick = () => {
     typewriter.animateButtons();
     typewriter.animateHandle();
 
-    paper.pushWord("name");
+    let word = generateWord(syllables.min, syllables.max);
+    paper.pushWord(word);
 }
