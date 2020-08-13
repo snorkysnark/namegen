@@ -1,37 +1,46 @@
 import { a as anime } from './lib/anime.es.js';
 
-function unwrap(nullable, error) {
-    if (nullable !== null) {
-        return nullable;
+const errorChecked = {
+    unwrap: function (nullable, error) {
+        if (nullable !== null) {
+            return nullable;
+        }
+        throw new Error(error);
+    },
+    query: function (selector, description) {
+        return this.unwrap(document.querySelector(selector), `Query failed: ${selector}`);
     }
-    throw new Error(error);
-}
-function querySelectorErr(selector, description) {
-    return unwrap(document.querySelector(selector), `Query failed: ${selector}`);
-}
-function getCssTransformPosition(element) {
-    const matrixString = window.getComputedStyle(element).transform;
-    const martix = matrixString.match(/[-]?\d+(\.\d+)?/g); //positive or negative floating point numbers
-    let x = 0;
-    let y = 0;
-    if (martix && martix.length == 6) {
-        x = +martix[4];
-        y = +martix[5];
+};
+const transform = {
+    getCssPosition: function (element) {
+        const matrixString = window.getComputedStyle(element).transform;
+        const martix = matrixString.match(/[-]?\d+(\.\d+)?/g); //positive or negative floating point numbers
+        let x = 0;
+        let y = 0;
+        if (martix && martix.length == 6) {
+            x = +martix[4];
+            y = +martix[5];
+        }
+        return { x, y };
+    },
+    getSvgPosition: function (element) {
+        const matrix = element.transform.baseVal.getItem(0).matrix;
+        let x = matrix.e;
+        let y = matrix.f;
+        return { x, y };
     }
-    return { x, y };
-}
-function getSvgTransformPosition(element) {
-    const matrix = element.transform.baseVal.getItem(0).matrix;
-    let x = matrix.e;
-    let y = matrix.f;
-    return { x, y };
-}
-function randomFilter(array) {
-    return array.filter((a) => Math.random() > 0.5);
-}
-function randomSort(array) {
-    return array.sort((a, b) => Math.random() - 0.5);
-}
+};
+const random = {
+    filter: function (array) {
+        return array.filter((a) => Math.random() > 0.5);
+    },
+    sort: function (array) {
+        return array.sort((a, b) => Math.random() - 0.5);
+    },
+    rangeInt: function (min, max) {
+        return Math.floor(min + Math.random() * (max - min));
+    }
+};
 
 const handleAnimationDuration = 150;
 const buttonAnimationDuration = 200;
@@ -39,12 +48,12 @@ const buttonAnimationOffset = 3;
 class Typewriter {
     constructor(selector) {
         this.buttonAnimation = null;
-        let root = querySelectorErr(selector);
-        this.clickArea = querySelectorErr(".typewriter-clickarea");
-        this.handleTop = querySelectorErr(".tw-handle-top");
-        this.handleCenter = querySelectorErr(".tw-handle-center");
+        let root = errorChecked.query(selector);
+        this.clickArea = errorChecked.query(".typewriter-clickarea");
+        this.handleTop = errorChecked.query(".tw-handle-top");
+        this.handleCenter = errorChecked.query(".tw-handle-center");
         this.buttons = [...document.querySelectorAll(".tw-button")];
-        this.initialButtonPos = getSvgTransformPosition(this.buttons[0]);
+        this.initialButtonPos = transform.getSvgPosition(this.buttons[0]);
     }
     set onClick(action) {
         this.clickArea.addEventListener("click", action);
@@ -53,7 +62,7 @@ class Typewriter {
         if (!this.buttonAnimation || this.buttonAnimation.completed) {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
-            const targets = randomSort(randomFilter(this.buttons));
+            const targets = random.sort(random.filter(this.buttons));
             const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,
@@ -91,8 +100,8 @@ class Typewriter {
 
 class Paper {
     constructor(selector) {
-        this.container = querySelectorErr(selector);
-        this.initialTranslation = getCssTransformPosition(this.container).y;
+        this.container = errorChecked.query(selector);
+        this.initialTranslation = transform.getCssPosition(this.container).y;
     }
     pushWord(word) {
         const element = document.createElement("div");
