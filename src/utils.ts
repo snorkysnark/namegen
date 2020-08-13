@@ -6,7 +6,7 @@ const errorChecked = {
         throw new Error(error);
     },
     
-    query: function(selector: string, description?: string): Element {
+    query: function(selector: string): Element {
         return this.unwrap(document.querySelector(selector), `Query failed: ${selector}`);
     }
 }
