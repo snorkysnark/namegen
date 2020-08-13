@@ -7,7 +7,7 @@ const errorChecked = {
         }
         throw new Error(error);
     },
-    query: function (selector, description) {
+    query: function (selector) {
         return this.unwrap(document.querySelector(selector), `Query failed: ${selector}`);
     }
 };
