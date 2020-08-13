@@ -39,6 +39,15 @@ const random = {
     },
     rangeInt: function (min, max) {
         return Math.floor(min + Math.random() * (max - min));
+    },
+    boolean: function () {
+        return Math.random() < 0.5;
+    },
+    charFrom: function (chars) {
+        return chars.charAt(this.rangeInt(0, chars.length));
+    },
+    chance: function (chance) {
+        return Math.random() < chance;
     }
 };
 
@@ -119,6 +128,34 @@ class Paper {
     }
 }
 
+const vowels = "аеёиоуыэюя";
+const consonants = "бвгджзклмнпрстфхцчшщ";
+function generateWord(minSyllables, maxSyllables) {
+    const syllablesCount = maxSyllables ? random.rangeInt(minSyllables, maxSyllables) : minSyllables;
+    let word = "";
+    let totalSyllables = 0;
+    let startWithVowel = random.boolean();
+    const addVowel = () => word += random.charFrom(vowels);
+    const addConsonant = () => word += random.charFrom(consonants);
+    while (totalSyllables < syllablesCount) {
+        if (startWithVowel) {
+            addVowel();
+            totalSyllables++;
+        }
+        else {
+            addConsonant();
+            if (random.chance(0.2))
+                addConsonant();
+        }
+        startWithVowel = !startWithVowel;
+    }
+    if (!startWithVowel && random.chance(0.4)) {
+        addConsonant();
+    }
+    return word;
+}
+
+const syllables = { min: 2, max: 4 };
 const paper = new Paper("#paper");
 const typewriter = new Typewriter("#typewriter");
 const sound = new Audio("type.wav");
@@ -127,5 +164,6 @@ typewriter.onClick = () => {
     sound.play();
     typewriter.animateButtons();
     typewriter.animateHandle();
-    paper.pushWord("name");
+    let word = generateWord(syllables.min, syllables.max);
+    paper.pushWord(word);
 };
