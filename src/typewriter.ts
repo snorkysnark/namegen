@@ -1,5 +1,5 @@
 import anime from 'animejs';
-import * as utils from './utils';
+import {errorChecked, transform, random, Vector2} from './utils';
 
 const handleAnimationDuration = 150;
 const buttonAnimationDuration = 200;
@@ -14,18 +14,18 @@ export default class Typewriter {
 
     buttons: SVGAElement[];
 
-    initialButtonPos: utils.Vector2;
+    initialButtonPos: Vector2;
     buttonAnimation: anime.AnimeInstance | null = null;
 
     constructor(selector: string) {
-        let root = utils.querySelectorErr(selector);
+        let root = errorChecked.query(selector);
 
-        this.clickArea = utils.querySelectorErr(".typewriter-clickarea");
-        this.handleTop = utils.querySelectorErr(".tw-handle-top") as SVGAElement;
-        this.handleCenter = utils.querySelectorErr(".tw-handle-center") as SVGAElement;
+        this.clickArea = errorChecked.query(".typewriter-clickarea");
+        this.handleTop = errorChecked.query(".tw-handle-top") as SVGAElement;
+        this.handleCenter = errorChecked.query(".tw-handle-center") as SVGAElement;
         this.buttons = [...document.querySelectorAll(".tw-button")] as SVGAElement[];
 
-        this.initialButtonPos = utils.getSvgTransformPosition(this.buttons[0]);
+        this.initialButtonPos = transform.getSvgPosition(this.buttons[0]);
     }
 
     set onClick(action: ()=>void) {
@@ -36,7 +36,7 @@ export default class Typewriter {
         if(!this.buttonAnimation || this.buttonAnimation.completed) {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
-            const targets = utils.randomSort(utils.randomFilter(this.buttons));
+            const targets = random.sort(random.filter(this.buttons));
             const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,

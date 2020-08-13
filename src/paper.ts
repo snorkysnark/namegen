@@ -1,13 +1,13 @@
 import anime from 'animejs';
-import * as utils from './utils';
+import {errorChecked, transform} from './utils';
 
 export default class Paper {
     container: HTMLElement;
     initialTranslation: number;
 
     constructor(selector: string) {
-        this.container = utils.querySelectorErr(selector) as HTMLElement;
-        this.initialTranslation = utils.getCssTransformPosition(this.container).y;
+        this.container = errorChecked.query(selector) as HTMLElement;
+        this.initialTranslation = transform.getCssPosition(this.container).y;
     }
 
     public pushWord(word: string) {
