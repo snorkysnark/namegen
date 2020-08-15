@@ -4,7 +4,7 @@ const vowels = "аеёиоуыэюя";
 const consonants = "бвгджзклмнпрстфхцчшщ";
 
 function generateWord(minSyllables: number, maxSyllables?: number): string {
-    const syllablesCount = maxSyllables ? random.rangeInt(minSyllables, maxSyllables) : minSyllables;
+    const syllablesCount = maxSyllables ? random.rangeInt(minSyllables, maxSyllables + 1) : minSyllables;
     let word = "";
     let totalSyllables = 0;
     let startWithVowel = random.boolean();

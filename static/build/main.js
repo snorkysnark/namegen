@@ -31,8 +31,15 @@ const transform = {
     }
 };
 const random = {
-    filter: function (array) {
-        return array.filter((a) => Math.random() > 0.5);
+    itemFrom: function (array) {
+        return array[this.rangeInt(0, array.length)];
+    },
+    filter: function (array, atLeastOne) {
+        let filtered = array.filter((a) => Math.random() > 0.5);
+        if (atLeastOne && filtered.length === 0) {
+            filtered = [this.itemFrom(array)];
+        }
+        return filtered;
     },
     sort: function (array) {
         return array.sort((a, b) => Math.random() - 0.5);
@@ -71,7 +78,7 @@ class Typewriter {
         if (!this.buttonAnimation || this.buttonAnimation.completed) {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
-            const targets = random.sort(random.filter(this.buttons));
+            const targets = random.sort(random.filter(this.buttons, true));
             const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,
@@ -131,7 +138,7 @@ class Paper {
 const vowels = "аеёиоуыэюя";
 const consonants = "бвгджзклмнпрстфхцчшщ";
 function generateWord(minSyllables, maxSyllables) {
-    const syllablesCount = maxSyllables ? random.rangeInt(minSyllables, maxSyllables) : minSyllables;
+    const syllablesCount = maxSyllables ? random.rangeInt(minSyllables, maxSyllables + 1) : minSyllables;
     let word = "";
     let totalSyllables = 0;
     let startWithVowel = random.boolean();

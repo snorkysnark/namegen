@@ -1,6 +1,7 @@
 import Typewriter from './typewriter';
 import Paper from './paper';
 import generateWord from './generator';
+import {random} from './utils';
 
 const syllables = {min: 2, max: 4};
 
