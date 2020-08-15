@@ -33,8 +33,16 @@ const transform = {
 }
 
 const random = {
-    filter: function<T>(array: Array<T>): Array<T> {
-        return array.filter((a) => Math.random() > 0.5);
+    itemFrom: function<T>(array: Array<T>): T {
+        return array[this.rangeInt(0, array.length)];
+    },
+
+    filter: function<T>(array: Array<T>, atLeastOne?: boolean): Array<T> {
+        let filtered =  array.filter((a) => Math.random() > 0.5);
+        if(atLeastOne && filtered.length === 0) {
+            filtered = [this.itemFrom(array)];
+        }
+        return filtered;
     },
     
     sort: function<T>(array: Array<T>): Array<T> {

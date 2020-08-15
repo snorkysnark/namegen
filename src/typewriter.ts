@@ -36,7 +36,7 @@ export default class Typewriter {
         if(!this.buttonAnimation || this.buttonAnimation.completed) {
             const x = this.initialButtonPos.x;
             const y = this.initialButtonPos.y + buttonAnimationOffset;
-            const targets = random.sort(random.filter(this.buttons));
+            const targets = random.sort(random.filter(this.buttons, true));
             const duration = buttonAnimationDuration / targets.length;
             this.buttonAnimation = anime({
                 targets,
